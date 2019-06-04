@@ -5,6 +5,7 @@ require dirname(__FILE__)."/config.php";
 function replaceUpOS($streams, $upos, $type) {
     foreach ($streams as &$stream) {
         $upos_found = FALSE;
+        if(!isset($stream["backup_url"])) {continue;}
         foreach ($stream["backup_url"] as $backupstream) {
             if (substr($backupstream, 0, 21 + strlen($upos)) === "http://upos-hz-mirror". $upos) {
                 if ($type === "dash") {
