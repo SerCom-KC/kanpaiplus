@@ -6,17 +6,26 @@ function replaceUpOS($streams, $upos, $type) {
     foreach ($streams as &$stream) {
         $upos_found = FALSE;
         if(!isset($stream["backup_url"])) {continue;}
-        foreach ($stream["backup_url"] as $backupstream) {
-            if (substr($backupstream, 0, 21 + strlen($upos)) === "http://upos-hz-mirror". $upos) {
-                if ($type === "dash") {
-                    $stream["base_url"] = $backupstream;
-                    $stream["baseUrl"] = $backupstream;
-                } elseif ($type === "durl") {
-                    $stream["url"] = $backupstream;
+        if ($type === "dash") {
+            $basestream = $stream["base_url"];
+        } elseif ($type === "durl") {
+            $basestream = $stream["url"];
+        }
+        if (!(substr($basestream, 0, 21 + strlen($upos)) === "http://upos-hz-mirror". $upos)) {
+            foreach ($stream["backup_url"] as $backupstream) {
+                if (substr($backupstream, 0, 21 + strlen($upos)) === "http://upos-hz-mirror". $upos) {
+                    if ($type === "dash") {
+                        $stream["base_url"] = $backupstream;
+                        $stream["baseUrl"] = $backupstream;
+                    } elseif ($type === "durl") {
+                        $stream["url"] = $backupstream;
+                    }
+                    $upos_found = TRUE;
+                    break;
                 }
-                $upos_found = TRUE;
-                break;
             }
+        } else {
+            $upos_found = TRUE;
         }
         if (!$upos_found) {return replaceUpOS($streams, "", $type);}
         unset($stream["backup_url"]);
