@@ -27,7 +27,7 @@ function replaceUpOS($streams, $upos, $type) {
         } else {
             $upos_found = TRUE;
         }
-        if (!$upos_found) {return replaceUpOS($streams, "", $type);}
+        if (!$upos_found && $upos != "") {return replaceUpOS($streams, "", $type);}
         unset($stream["backup_url"]);
         unset($stream["backupUrl"]);
     }
